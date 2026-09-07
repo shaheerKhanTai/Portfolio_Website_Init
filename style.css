@@ -1,0 +1,235 @@
+html{
+    scroll-behavior: smooth;        /* anchor links (#about, #skills...) glide instead of jumping */
+}
+
+body{
+    margin: 0;                 /* removes the browser's default 8px gap around the edges */
+    padding: 0;
+    /* ambient glow: a giant soft olive light at the very bottom of the page (like an aurora
+       behind the cards). radial-gradient = light radiating from a POINT, not along a line.
+       The final value (#121212) is the base color everything sits on. */
+    background:
+        radial-gradient(800px circle at 50% 100%, rgba(186, 188, 104, 0.08), transparent 60%),
+        #121212;
+    font-family: tahoma;
+    color: #e0e0e0;            /* soft off-white text, never pure #fff (glare) */
+    /* height: 100vh REMOVED — the page now scrolls (hero + cards + contact),
+       so the body is taller than one screen; locking it to 100vh made no sense anymore */
+}
+
+.container{
+    text-align: center;
+    height: 100vh;
+    background-image:
+        linear-gradient(to top, #121212 0%, rgba(18, 18, 18, 0) 35%),  /* TOP layer: fade to the dark page color — image melts into the page */
+        linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 20, 0, 0.3)),         /* dark tint layer */
+        url("image_building.jpg");                                        /* the photo, at the bottom of the stack */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: rgb(186, 188, 104);
+}
+/* ---------- HERO TEXT ---------- */
+
+/* ---------- ANIMATIONS ---------- */
+
+@keyframes fadeUp{
+    from{
+        opacity: 0;                 /* invisible */
+        transform: translateY(30px);/* sitting 30px below its final spot */
+    }
+    to{
+        opacity: 1;                 /* fully visible */
+        transform: translateY(0);   /* in place */
+    }
+}
+
+.hero-text{
+    margin: auto;                  /* FLEXBOX TRICK: auto margin absorbs all free space around the
+                                       item → pushes it to the dead-center of the hero, below the navbar */
+    text-align: center;
+    color: #ffffff;
+    padding: 0 20px;               /* stops the text touching screen edges on small windows */
+    animation: fadeUp 1s ease-out 0.3s both;  /* run the fadeUp keyframes: 1s long, gentle landing, start after 0.3s */
+}
+
+.hero-text h1{
+    font-size: 56px;               /* big and bold — the centerpiece */
+    margin: 0 0 10px 0;            /* h1 has big default margins — reset them, keep a small gap below */
+    letter-spacing: 2px;           /* extra space between letters = elegant, airy look for big headings */
+
+    /* GRADIENT TEXT: paint white→olive on the box, clip it to the letters,
+       make the letters themselves transparent. All 3 lines are required. */
+    background: linear-gradient(180deg, #ffffff 30%, rgb(186, 188, 104));
+    -webkit-background-clip: text; /* Chrome/Edge/Safari need this prefix for text clipping */
+    background-clip: text;         /* the standard version (Firefox) */
+    color: transparent;            /* the real text turns invisible — only the gradient shows */
+}
+
+.hero-text p{
+    font-size: 20px;
+    margin: 0;                     /* p also has default margins — reset */
+    color: #e8e8e8;                /* slightly dimmer than the name — creates hierarchy */
+}
+
+.navbar{
+    width: 100%;                    /* stretch across the full hero, ignoring the parent's centering */
+    display: flex;                  /* lay out logo and links in a horizontal row */
+    justify-content: space-between; /* logo pushed left, links pushed right */
+    align-items: center;            /* vertically center logo and links with each other */
+    padding: 20px 40px;             /* breathing room: 20px top/bottom, 40px left/right */
+    box-sizing: border-box;         /* padding counts INSIDE the 100% width, so nothing overflows */
+    background-color: rgba(0, 0, 0, 0.45);  /* semi-transparent dark bar (same alpha trick as the hero) */
+    backdrop-filter: blur(8px);     /* frosted-glass effect: blurs the image behind the bar */
+}
+
+.logo{
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.nav-links{
+    display: flex;                  /* put the <li> items in a row instead of stacked */
+    gap: 30px;                      /* space BETWEEN each link (modern replacement for margins) */
+    list-style: none;               /* removes the bullet points */
+    margin: 0;                      /* <ul> has a default margin — strip it */
+    padding: 0;                     /* ...and default left padding for bullets — strip that too */
+}
+
+.nav-links a{
+    color: #ffffff;
+    text-decoration: none;          /* removes the underline from links */
+    font-size: 16px;
+}
+
+.nav-links a:hover{
+    color: rgb(186, 188, 104);      /* your olive-green accent color when the mouse hovers over */
+}
+
+/* ---------- CARDS (About / Skills) ---------- */
+
+.card-section{
+    display: flex;                  /* flexbox container for the cards */
+    flex-direction: column;         /* stack the cards VERTICALLY (one below the other) */
+    align-items: center;            /* with column direction, this now centers them HORIZONTALLY */
+    gap: 40px;                      /* vertical space between the stacked cards */
+    padding: 60px 40px;             /* breathing room around the whole section */
+}
+
+.card{
+    background-color: #1e1e1e;      /* DARK MODE: a step LIGHTER than the page (#121212) — elevation = lightness */
+    border: 1px solid #333333;      /* shadows fade into dark backgrounds, so a subtle border restores the edge */
+    border-radius: 12px;            /* rounded corners — softens the box */
+    padding: 30px;
+    width: 400px;                   /* fixed width so both cards match */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);   /* deeper shadow than light mode (0.15 → 0.5) to stay visible */
+    transition: transform 0.3s, box-shadow 0.3s;  /* animate these properties over 0.3s (for the hover lift) */
+
+    /* NESTED FLEXBOX: the card itself becomes a flex container, so its content
+       can be centered VERTICALLY inside the (now equal-height) card */
+    display: flex;
+    flex-direction: column;         /* stack the h2 and the text vertically */
+    justify-content: center;        /* center that stack top-to-bottom */
+    text-align: center;             /* center each line of text horizontally too */
+}
+
+.card:hover{
+    transform: translateY(-10px);   /* nudge the card 10px UP (negative Y = up) */
+    border-color: rgb(186, 188, 104);  /* dark-mode flourish: the border lights up in your accent color on hover */
+    /* TWO stacked shadows: a black one for depth + an olive one for GLOW
+       (shadows can be any color — a blurred colored shadow IS a glow) */
+    box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.7),
+        0 0 30px rgba(186, 188, 104, 0.15);
+}
+
+/* scroll-reveal: cards animate in AS YOU SCROLL (no JavaScript!)
+   Uses `translate` (a separate property from `transform`) so it doesn't
+   fight with the :hover lift above — they compose instead of overriding. */
+@keyframes reveal{
+    from{
+        opacity: 0;
+        translate: 0 40px;          /* start 40px lower (own property, independent of transform) */
+    }
+    to{
+        opacity: 1;
+        translate: 0 0;
+    }
+}
+
+@media (prefers-reduced-motion: no-preference){   /* only animate for users who haven't asked their OS to reduce motion */
+    .card{
+        animation: reveal linear both;  /* duration is ignored — progress comes from scroll, not time */
+        animation-timeline: view();     /* THE magic line: animation progress = how far the element has scrolled into view */
+        animation-range: entry 0% entry 60%;  /* start when it enters the viewport, finish when 60% in — so it's fully visible before the animation ends */
+    }
+}
+
+.skills-list{
+    list-style: none;               /* no bullets */
+    padding: 0;
+    margin: 0;
+    display: flex;                  /* pills flow in a row... */
+    flex-wrap: wrap;                /* ...and wrap to the next line when out of room */
+    gap: 10px;                      /* space between pills */
+    justify-content: center;        /* center them in the card */
+}
+
+.skills-list li{
+    background-color: rgba(186, 188, 104, 0.12);  /* accent color at 12% = soft olive tint */
+    color: rgb(186, 188, 104);      /* full-strength accent for the text */
+    padding: 6px 14px;              /* pill padding: small vertical, roomier horizontal */
+    border-radius: 999px;           /* radius bigger than half the height = fully round "pill" ends */
+    font-size: 14px;
+}
+
+/* ---------- CONTACT ---------- */
+
+.contact-section{
+    display: flex;
+    justify-content: center;        /* center the single card horizontally */
+    padding: 0 40px 80px 40px;      /* no top padding (cards have bottom padding already), 80px bottom for page breathing room */
+}
+
+.contact-list{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.contact-list li{
+    margin-bottom: 10px;            /* vertical space between phone and email rows */
+}
+
+.contact-label{
+    font-weight: bold;              /* "Phone:" / "Email:" labels stand out */
+    display: inline-block;          /* lets us give the label a fixed width... */
+    width: 70px;                    /* ...so phone and email values align vertically */
+}
+
+.contact-list a{
+    color: rgb(186, 188, 104);      /* your olive accent — light enough to read on dark cards (the old #556b2f was for white backgrounds) */
+    text-decoration: none;
+}
+
+.contact-list a:hover{
+    text-decoration: underline;     /* underline on hover is a common convention for links in body text */
+}
+
+/* ---------- FOOTER ---------- */
+
+.footer{
+    text-align: center;
+    padding: 30px 20px;             /* roomy padding: 30px top/bottom so it doesn't feel cramped */
+    border-top: 1px solid #333333;  /* hairline separator — the classic way to close a page */
+    color: #888888;                 /* dimmed text: footers are supporting cast, not the star */
+    font-size: 14px;
+}
+
+.footer p{
+    margin: 0;                      /* reset default paragraph margins */
+}
