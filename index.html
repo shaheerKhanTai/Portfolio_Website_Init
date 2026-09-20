@@ -1,75 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shaheer Chughtai | Web Technologies Task</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shaheer Chughtai | Web Technologies Task</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container" id="home">
 
-        <nav class="navbar">
-            <div class="logo">Shaheer | BS IT (Undergraduate) </div>
-            <ul class="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#skills">Skills</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
+<div class="canvas">
 
-        <div class="hero-text">
-            <h1>Muhammad Shaheer</h1>
-            <p>Information Technology Student | Aspiring Data Analyst</p>
-        </div>
+  <nav class="navbar frame">
+    <span class="frame-tag">Navbar</span>
+    <div class="logo">Shaheer | BS IT (Undergraduate)</div>
+    <ul class="nav-links">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="nav-controls">
+      <button type="button" class="pill-btn" id="paletteToggle" aria-label="Cycle color palette">
+        <span id="paletteName">Flame</span>
+      </button>
+      <button type="button" class="pill-btn" id="themeToggle" aria-label="Toggle light and dark mode">
+        <span id="themeLabel">Dark</span>
+      </button>
+    </div>
+  </nav>
 
-        </div>
+  <div class="frame hero-frame" id="home">
+    <span class="frame-tag">Hero</span>
+    <h1>Muhammad Shaheer</h1>
+    <p>Information Technology Student | Aspiring Data Analyst</p>
+    <span class="spec-line">Space Grotesk / 700 / Hero H1</span>
+  </div>
 
-    <section class="card-section">
+  <div class="frame-row">
+    <div class="frame" id="about">
+      <span class="frame-tag">Card / About</span>
+      <h2>About</h2>
+      <p>
+        I'm an IT student and aspiring Data Analyst with a strong interest
+        in software development, data analysis, and machine learning. I work primarily with
+        Python and SQL, and I enjoy building practical software tools that solve real-world problems.
+      </p>
+    </div>
 
-        <div class="card" id="about">
-            <h2>About</h2>
-            <p>
-                I’m an IT student and aspiring Data Analyst with a strong interest
-                in software development, data analysis, and machine learning. I work primarily with
-                Python and SQL, and I enjoy building practical software tools that solve real-world problems.
-            </p>
-        </div>
+    <div class="frame" id="skills">
+      <span class="frame-tag">Card / Skills</span>
+      <h2>Skills</h2>
+      <ul class="skills-list">
+        <li>Python</li>
+        <li>SQL &amp; Databases</li>
+        <li>Data Cleaning &amp; Analysis</li>
+        <li>EDA</li>
+        <li>Prompt Engineering</li>
+      </ul>
+    </div>
+  </div>
 
-        <div class="card" id="skills">
-            <h2>Skills</h2>
-            <ul class="skills-list">
-                <li>Python</li>
-                <li>SQL &amp; Databases</li>
-                <li>Data Cleaning &amp; Analysis</li>
-                <li>EDA</li>
-                <li>Prompt Engineering</li>
-            </ul>
-        </div>
+  <div class="frame contact-frame" id="contact">
+    <span class="frame-tag">Card / Contact</span>
+    <h2>Contact</h2>
+    <p>Feel free to reach out — I'm always open to a good conversation about tech and data.</p>
+    <ul class="contact-list">
+      <li>
+        <span class="contact-label">Phone</span>
+        <a href="tel:+923048798777">+92 304 8798777</a>
+      </li>
+      <li>
+        <span class="contact-label">Email</span>
+        <a href="mailto:automatedshaheer@gmail.com">automatedshaheer@gmail.com</a>
+      </li>
+    </ul>
+  </div>
 
-    </section>
+</div>
 
-    <section class="contact-section">
-        <div class="card" id="contact">
-            <h2>Contact</h2>
-            <p>Feel free to reach out — I'm always open to a good conversation about tech and data.</p>
-            <ul class="contact-list">
-                <li>
-                    <span class="contact-label">Phone:</span>
-                    <a href="tel:+923048798777">+92 304 8798777</a>
-                </li>
-                <li>
-                    <span class="contact-label">Email:</span>
-                    <a href="mailto:automatedshaheer@gmail.com">automatedshaheer@gmail.com</a>
-                </li>
-            </ul>
-        </div>
-    </section>
+<footer class="footer">
+  <p>© 2026 Muhammad Shaheer — Built with HTML &amp; CSS</p>
+</footer>
 
-    <footer class="footer">
-        <p>© 2026 Muhammad Shaheer — Built with HTML &amp; CSS</p>
-    </footer>
+<div class="canvas-meta" id="canvasMeta">flame / dark</div>
+
+<script>
+  /* ------------------------------------------------------------
+     PALETTE + THEME
+     Two independent switches on <body>: data-theme (light/dark)
+     and data-palette (flame/mauve/forest/harvest/stone). Every
+     color in style.css is a var() keyed off that pair, so flipping
+     either attribute repaints the whole page. Both choices persist
+     to localStorage per visitor.
+     ------------------------------------------------------------ */
+  const PALETTES = [
+    { id: 'flame',   name: 'Flame'   },
+    { id: 'mauve',   name: 'Mauve'   },
+    { id: 'forest',  name: 'Forest'  },
+    { id: 'harvest', name: 'Harvest' },
+    { id: 'stone',   name: 'Stone'   }
+  ];
+
+  const bodyEl      = document.body;
+  const paletteName = document.getElementById('paletteName');
+  const paletteBtn  = document.getElementById('paletteToggle');
+  const themeBtn    = document.getElementById('themeToggle');
+  const themeLabel  = document.getElementById('themeLabel');
+  const canvasMeta  = document.getElementById('canvasMeta');
+
+  function safeGet(key){ try { return localStorage.getItem(key); } catch (e) { return null; } }
+  function safeSet(key, val){ try { localStorage.setItem(key, val); } catch (e) { /* ignore */ } }
+
+  function updateMeta(paletteId, theme){
+    canvasMeta.textContent = paletteId + ' / ' + theme;
+  }
+
+  let paletteIndex = Math.max(0, PALETTES.findIndex(p => p.id === safeGet('site-palette')));
+  let theme = safeGet('site-theme') ||
+    (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+
+  function applyPalette(i){
+    paletteIndex = (i + PALETTES.length) % PALETTES.length;
+    const p = PALETTES[paletteIndex];
+    bodyEl.setAttribute('data-palette', p.id);
+    paletteName.textContent = p.name;
+    safeSet('site-palette', p.id);
+    updateMeta(p.id, theme);
+  }
+
+  function applyTheme(t){
+    theme = t;
+    bodyEl.setAttribute('data-theme', theme);
+    themeLabel.textContent = theme === 'dark' ? 'Dark' : 'Light';
+    safeSet('site-theme', theme);
+    updateMeta(PALETTES[paletteIndex].id, theme);
+  }
+
+  paletteBtn.addEventListener('click', () => applyPalette(paletteIndex + 1));
+  themeBtn.addEventListener('click', () => applyTheme(theme === 'dark' ? 'light' : 'dark'));
+
+  applyPalette(paletteIndex);
+  applyTheme(theme);
+</script>
 
 </body>
 </html>

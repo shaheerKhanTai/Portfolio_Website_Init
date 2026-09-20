@@ -1,235 +1,465 @@
-html{
-    scroll-behavior: smooth;        /* anchor links (#about, #skills...) glide instead of jumping */
+/* ==========================================================================
+   TOKENS
+   ---------------------------------------------------------------------------
+   Design language: the page reads as if it's still sitting on a Figma
+   canvas — dot-grid backdrop, every section is a bordered "frame" with a
+   little name tag and corner brackets (like a selected layer), flat hard
+   shadows instead of blur, dashed rules standing in for spec/measurement
+   guides. Five palettes × light/dark = 10 combinations, all driven by the
+   variables below; nothing past this block hardcodes a color.
+   ========================================================================== */
+
+:root{
+  --font-display: 'Space Grotesk', 'Segoe UI', system-ui, sans-serif;
+  --font-body: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
+
+*, *::before, *::after{ box-sizing: border-box; }
+
+html{
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(72px + var(--safe-top));
+}
+
+/* ---------- FLAME (default) ---------- */
+body{
+  --bg: #121212;
+  --surface: #1b1b1b;
+  --surface-border: #3a3a3a;
+  --text-strong: #ffffff;
+  --text: #d8d8d8;
+  --text-dim: #b7b7ab;
+  --text-mute: #7c7c72;
+  --accent: #babc68;
+  --accent-soft: rgba(186, 188, 104, 0.14);
+}
+body[data-palette="flame"][data-theme="light"]{
+  --bg: #f7f5ea;
+  --surface: #ffffff;
+  --surface-border: #d8d4c0;
+  --text-strong: #1a1a12;
+  --text: #33321f;
+  --text-dim: #5a5942;
+  --text-mute: #8d8b72;
+  --accent: #767a3c;
+  --accent-soft: rgba(118, 122, 60, 0.12);
+}
+
+/* ---------- MAUVE — 22223B · 4A4E69 · 9A8C98 · C9ADA7 · F2E9E4 ---------- */
+body[data-palette="mauve"][data-theme="dark"]{
+  --bg: #22223b;
+  --surface: #292944;
+  --surface-border: #4a4e69;
+  --text-strong: #f2e9e4;
+  --text: #ded4ce;
+  --text-dim: #c9ada7;
+  --text-mute: #9a8c98;
+  --accent: #c9ada7;
+  --accent-soft: rgba(201, 173, 167, 0.16);
+}
+body[data-palette="mauve"][data-theme="light"]{
+  --bg: #f2e9e4;
+  --surface: #ffffff;
+  --surface-border: #d9c7c1;
+  --text-strong: #22223b;
+  --text: #363654;
+  --text-dim: #4a4e69;
+  --text-mute: #9a8c98;
+  --accent: #4a4e69;
+  --accent-soft: rgba(74, 78, 105, 0.10);
+}
+
+/* ---------- FOREST — CAD2C5 · 84A98C · 52796F · 354F52 · 2F3E46 ---------- */
+body[data-palette="forest"][data-theme="dark"]{
+  --bg: #2f3e46;
+  --surface: #354f52;
+  --surface-border: #4c6a63;
+  --text-strong: #eef3ea;
+  --text: #cad2c5;
+  --text-dim: #a9c0af;
+  --text-mute: #84a98c;
+  --accent: #9fc2a4;
+  --accent-soft: rgba(159, 194, 164, 0.16);
+}
+body[data-palette="forest"][data-theme="light"]{
+  --bg: #cad2c5;
+  --surface: #ffffff;
+  --surface-border: #a9bcaf;
+  --text-strong: #24322f;
+  --text: #2f3e46;
+  --text-dim: #3f5d55;
+  --text-mute: #52796f;
+  --accent: #355e56;
+  --accent-soft: rgba(53, 94, 86, 0.12);
+}
+
+/* ---------- HARVEST — 606C38 · 283618 · FEFAE0 · DDA15E · BC6C25 ---------- */
+body[data-palette="harvest"][data-theme="dark"]{
+  --bg: #283618;
+  --surface: #34441f;
+  --surface-border: #606c38;
+  --text-strong: #fefae0;
+  --text: #eee6c8;
+  --text-dim: #dda15e;
+  --text-mute: #a68a5a;
+  --accent: #dda15e;
+  --accent-soft: rgba(221, 161, 94, 0.16);
+}
+body[data-palette="harvest"][data-theme="light"]{
+  --bg: #fefae0;
+  --surface: #ffffff;
+  --surface-border: #efd9a6;
+  --text-strong: #21290f;
+  --text: #283618;
+  --text-dim: #606c38;
+  --text-mute: #93884f;
+  --accent: #bc6c25;
+  --accent-soft: rgba(188, 108, 37, 0.12);
+}
+
+/* ---------- STONE — 463F3A · 8A817C · BCB8B1 · F4F3EE · E0AFA0 ---------- */
+body[data-palette="stone"][data-theme="dark"]{
+  --bg: #463f3a;
+  --surface: #514a44;
+  --surface-border: #8a817c;
+  --text-strong: #f4f3ee;
+  --text: #e6e2da;
+  --text-dim: #bcb8b1;
+  --text-mute: #a89e97;
+  --accent: #e0afa0;
+  --accent-soft: rgba(224, 175, 160, 0.16);
+}
+body[data-palette="stone"][data-theme="light"]{
+  --bg: #f4f3ee;
+  --surface: #ffffff;
+  --surface-border: #bcb8b1;
+  --text-strong: #2c2724;
+  --text: #463f3a;
+  --text-dim: #6f655e;
+  --text-mute: #8a817c;
+  /* E0AFA0 straight from the brief reads too light for text/links on white,
+     so it's darkened here for anything read as text; it still shows up
+     at full strength as the fill behind tags and skill chips below. */
+  --accent: #b5715a;
+  --accent-soft: rgba(224, 175, 160, 0.22);
+}
+
+/* ==========================================================================
+   CANVAS
+   The whole page is one big dot-grid, standing in for the Figma canvas.
+   Everything else sits on top of it as discrete "frames".
+   ========================================================================== */
 
 body{
-    margin: 0;                 /* removes the browser's default 8px gap around the edges */
-    padding: 0;
-    /* ambient glow: a giant soft olive light at the very bottom of the page (like an aurora
-       behind the cards). radial-gradient = light radiating from a POINT, not along a line.
-       The final value (#121212) is the base color everything sits on. */
-    background:
-        radial-gradient(800px circle at 50% 100%, rgba(186, 188, 104, 0.08), transparent 60%),
-        #121212;
-    font-family: tahoma;
-    color: #e0e0e0;            /* soft off-white text, never pure #fff (glare) */
-    /* height: 100vh REMOVED — the page now scrolls (hero + cards + contact),
-       so the body is taller than one screen; locking it to 100vh made no sense anymore */
+  margin: 0;
+  padding-top: var(--safe-top);
+  padding-bottom: var(--safe-bottom);
+  background-color: var(--bg);
+  background-image: radial-gradient(var(--surface-border) 1px, transparent 1px);
+  background-size: 24px 24px;
+  font-family: var(--font-body);
+  color: var(--text);
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
-.container{
-    text-align: center;
-    height: 100vh;
-    background-image:
-        linear-gradient(to top, #121212 0%, rgba(18, 18, 18, 0) 35%),  /* TOP layer: fade to the dark page color — image melts into the page */
-        linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 20, 0, 0.3)),         /* dark tint layer */
-        url("image_building.jpg");                                        /* the photo, at the bottom of the stack */
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: rgb(186, 188, 104);
-}
-/* ---------- HERO TEXT ---------- */
+h1, h2{ font-family: var(--font-display); margin: 0; }
 
-/* ---------- ANIMATIONS ---------- */
-
-@keyframes fadeUp{
-    from{
-        opacity: 0;                 /* invisible */
-        transform: translateY(30px);/* sitting 30px below its final spot */
-    }
-    to{
-        opacity: 1;                 /* fully visible */
-        transform: translateY(0);   /* in place */
-    }
+.canvas{
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 48px 20px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 56px;
+  animation: settle 0.6s ease-out both;
 }
 
-.hero-text{
-    margin: auto;                  /* FLEXBOX TRICK: auto margin absorbs all free space around the
-                                       item → pushes it to the dead-center of the hero, below the navbar */
-    text-align: center;
-    color: #ffffff;
-    padding: 0 20px;               /* stops the text touching screen edges on small windows */
-    animation: fadeUp 1s ease-out 0.3s both;  /* run the fadeUp keyframes: 1s long, gentle landing, start after 0.3s */
+@keyframes settle{
+  from{ opacity: 0; transform: translateY(16px); }
+  to{ opacity: 1; transform: translateY(0); }
 }
 
-.hero-text h1{
-    font-size: 56px;               /* big and bold — the centerpiece */
-    margin: 0 0 10px 0;            /* h1 has big default margins — reset them, keep a small gap below */
-    letter-spacing: 2px;           /* extra space between letters = elegant, airy look for big headings */
+/* ---------- FRAME
+   Shared shell for every named section: a bordered box, corner brackets
+   like a selected layer, a name tag hanging off the top edge, and a hard
+   (non-blurred) offset shadow that grows on hover instead of softening. */
 
-    /* GRADIENT TEXT: paint white→olive on the box, clip it to the letters,
-       make the letters themselves transparent. All 3 lines are required. */
-    background: linear-gradient(180deg, #ffffff 30%, rgb(186, 188, 104));
-    -webkit-background-clip: text; /* Chrome/Edge/Safari need this prefix for text clipping */
-    background-clip: text;         /* the standard version (Firefox) */
-    color: transparent;            /* the real text turns invisible — only the gradient shows */
+.frame{
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: 0px;
+  box-shadow: 6px 6px 0 var(--surface-border);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.25s ease;
 }
 
-.hero-text p{
-    font-size: 20px;
-    margin: 0;                     /* p also has default margins — reset */
-    color: #e8e8e8;                /* slightly dimmer than the name — creates hierarchy */
+.frame::before,
+.frame::after{
+  content: "";
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border: 1px solid var(--text-mute);
+  opacity: 0.55;
+  pointer-events: none;
 }
+.frame::before{ top: -1px; left: -1px; border-right: none; border-bottom: none; }
+.frame::after{ bottom: -1px; right: -1px; border-left: none; border-top: none; }
+
+.frame-tag{
+  position: absolute;
+  top: -12px;
+  left: 16px;
+  background: var(--accent);
+  color: var(--bg);
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 0px;
+  line-height: 1;
+}
+
+.frame:hover{
+  transform: translate(-3px, -3px);
+  box-shadow: 9px 9px 0 var(--accent);
+  border-color: var(--accent);
+}
+
+/* Hover-lift reads oddly on a bar pinned to the top of the viewport, so
+   the navbar keeps the frame's look without the motion. */
+.navbar.frame:hover{
+  transform: none;
+  box-shadow: 6px 6px 0 var(--surface-border);
+  border-color: var(--surface-border);
+}
+
+/* ---------- NAVBAR ---------- */
 
 .navbar{
-    width: 100%;                    /* stretch across the full hero, ignoring the parent's centering */
-    display: flex;                  /* lay out logo and links in a horizontal row */
-    justify-content: space-between; /* logo pushed left, links pushed right */
-    align-items: center;            /* vertically center logo and links with each other */
-    padding: 20px 40px;             /* breathing room: 20px top/bottom, 40px left/right */
-    box-sizing: border-box;         /* padding counts INSIDE the 100% width, so nothing overflows */
-    background-color: rgba(0, 0, 0, 0.45);  /* semi-transparent dark bar (same alpha trick as the hero) */
-    backdrop-filter: blur(8px);     /* frosted-glass effect: blurs the image behind the bar */
+  position: sticky;
+  top: calc(20px + var(--safe-top));
+  z-index: 20;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 14px 20px;
 }
 
 .logo{
-    color: #ffffff;
-    font-size: 24px;
-    font-weight: bold;
+  color: var(--text-strong);
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
 }
 
 .nav-links{
-    display: flex;                  /* put the <li> items in a row instead of stacked */
-    gap: 30px;                      /* space BETWEEN each link (modern replacement for margins) */
-    list-style: none;               /* removes the bullet points */
-    margin: 0;                      /* <ul> has a default margin — strip it */
-    padding: 0;                     /* ...and default left padding for bullets — strip that too */
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .nav-links a{
-    color: #ffffff;
-    text-decoration: none;          /* removes the underline from links */
-    font-size: 16px;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+.nav-links a:hover,
+.nav-links a:focus-visible{ color: var(--accent); }
+
+.nav-controls{
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.nav-links a:hover{
-    color: rgb(186, 188, 104);      /* your olive-green accent color when the mouse hovers over */
+.pill-btn{
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text);
+  background: transparent;
+  border: 1px solid var(--surface-border);
+  border-radius: 0px;
+  padding: 7px 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+}
+.pill-btn:hover,
+.pill-btn:focus-visible{
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+.pill-btn:focus-visible{ outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ---------- HERO FRAME ---------- */
+
+.hero-frame{
+  padding: 72px 32px;
+  text-align: center;
 }
 
-/* ---------- CARDS (About / Skills) ---------- */
-
-.card-section{
-    display: flex;                  /* flexbox container for the cards */
-    flex-direction: column;         /* stack the cards VERTICALLY (one below the other) */
-    align-items: center;            /* with column direction, this now centers them HORIZONTALLY */
-    gap: 40px;                      /* vertical space between the stacked cards */
-    padding: 60px 40px;             /* breathing room around the whole section */
+.hero-frame h1{
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--text-strong);
 }
 
-.card{
-    background-color: #1e1e1e;      /* DARK MODE: a step LIGHTER than the page (#121212) — elevation = lightness */
-    border: 1px solid #333333;      /* shadows fade into dark backgrounds, so a subtle border restores the edge */
-    border-radius: 12px;            /* rounded corners — softens the box */
-    padding: 30px;
-    width: 400px;                   /* fixed width so both cards match */
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);   /* deeper shadow than light mode (0.15 → 0.5) to stay visible */
-    transition: transform 0.3s, box-shadow 0.3s;  /* animate these properties over 0.3s (for the hover lift) */
-
-    /* NESTED FLEXBOX: the card itself becomes a flex container, so its content
-       can be centered VERTICALLY inside the (now equal-height) card */
-    display: flex;
-    flex-direction: column;         /* stack the h2 and the text vertically */
-    justify-content: center;        /* center that stack top-to-bottom */
-    text-align: center;             /* center each line of text horizontally too */
+.hero-frame p{
+  margin: 10px 0 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-dim);
 }
 
-.card:hover{
-    transform: translateY(-10px);   /* nudge the card 10px UP (negative Y = up) */
-    border-color: rgb(186, 188, 104);  /* dark-mode flourish: the border lights up in your accent color on hover */
-    /* TWO stacked shadows: a black one for depth + an olive one for GLOW
-       (shadows can be any color — a blurred colored shadow IS a glow) */
-    box-shadow:
-        0 20px 40px rgba(0, 0, 0, 0.7),
-        0 0 30px rgba(186, 188, 104, 0.15);
+.spec-line{
+  display: inline-block;
+  margin-top: 26px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--surface-border);
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-mute);
 }
 
-/* scroll-reveal: cards animate in AS YOU SCROLL (no JavaScript!)
-   Uses `translate` (a separate property from `transform`) so it doesn't
-   fight with the :hover lift above — they compose instead of overriding. */
-@keyframes reveal{
-    from{
-        opacity: 0;
-        translate: 0 40px;          /* start 40px lower (own property, independent of transform) */
-    }
-    to{
-        opacity: 1;
-        translate: 0 0;
-    }
+/* ---------- ABOUT / SKILLS ROW ---------- */
+
+.frame-row{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
 }
 
-@media (prefers-reduced-motion: no-preference){   /* only animate for users who haven't asked their OS to reduce motion */
-    .card{
-        animation: reveal linear both;  /* duration is ignored — progress comes from scroll, not time */
-        animation-timeline: view();     /* THE magic line: animation progress = how far the element has scrolled into view */
-        animation-range: entry 0% entry 60%;  /* start when it enters the viewport, finish when 60% in — so it's fully visible before the animation ends */
-    }
+.frame-row .frame{
+  flex: 1 1 280px;
+  padding: 30px;
 }
+
+.frame h2{
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 14px;
+  color: var(--text-strong);
+}
+
+.frame p{ margin: 0; line-height: 1.65; color: var(--text-dim); }
 
 .skills-list{
-    list-style: none;               /* no bullets */
-    padding: 0;
-    margin: 0;
-    display: flex;                  /* pills flow in a row... */
-    flex-wrap: wrap;                /* ...and wrap to the next line when out of room */
-    gap: 10px;                      /* space between pills */
-    justify-content: center;        /* center them in the card */
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .skills-list li{
-    background-color: rgba(186, 188, 104, 0.12);  /* accent color at 12% = soft olive tint */
-    color: rgb(186, 188, 104);      /* full-strength accent for the text */
-    padding: 6px 14px;              /* pill padding: small vertical, roomier horizontal */
-    border-radius: 999px;           /* radius bigger than half the height = fully round "pill" ends */
-    font-size: 14px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  padding: 5px 11px;
+  border-radius: 0px;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
-/* ---------- CONTACT ---------- */
+/* ---------- CONTACT FRAME ---------- */
 
-.contact-section{
-    display: flex;
-    justify-content: center;        /* center the single card horizontally */
-    padding: 0 40px 80px 40px;      /* no top padding (cards have bottom padding already), 80px bottom for page breathing room */
+.contact-frame{
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 30px;
+  text-align: left;
 }
+
+.contact-frame h2{ text-align: center; margin-bottom: 8px; }
+.contact-frame > p{ text-align: center; margin-bottom: 20px; }
 
 .contact-list{
-    list-style: none;
-    padding: 0;
-    margin: 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-.contact-list li{
-    margin-bottom: 10px;            /* vertical space between phone and email rows */
-}
+.contact-list li{ display: flex; gap: 8px; margin-bottom: 10px; }
 
 .contact-label{
-    font-weight: bold;              /* "Phone:" / "Email:" labels stand out */
-    display: inline-block;          /* lets us give the label a fixed width... */
-    width: 70px;                    /* ...so phone and email values align vertically */
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  width: 62px;
+  flex-shrink: 0;
+  padding-top: 1px;
 }
 
-.contact-list a{
-    color: rgb(186, 188, 104);      /* your olive accent — light enough to read on dark cards (the old #556b2f was for white backgrounds) */
-    text-decoration: none;
-}
-
-.contact-list a:hover{
-    text-decoration: underline;     /* underline on hover is a common convention for links in body text */
-}
+.contact-list a{ color: var(--accent); text-decoration: none; font-weight: 500; }
+.contact-list a:hover,
+.contact-list a:focus-visible{ text-decoration: underline; }
 
 /* ---------- FOOTER ---------- */
 
 .footer{
-    text-align: center;
-    padding: 30px 20px;             /* roomy padding: 30px top/bottom so it doesn't feel cramped */
-    border-top: 1px solid #333333;  /* hairline separator — the classic way to close a page */
-    color: #888888;                 /* dimmed text: footers are supporting cast, not the star */
-    font-size: 14px;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 22px 20px calc(22px + var(--safe-bottom));
+  border-top: 1px dashed var(--surface-border);
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--text-mute);
 }
 
-.footer p{
-    margin: 0;                      /* reset default paragraph margins */
+/* ---------- INSPECT READOUT
+   Small fixed badge, bottom-left, echoing the palette/theme pair Figma's
+   own inspect panel would show for a selected node. Purely informational. */
+
+.canvas-meta{
+  position: fixed;
+  left: 14px;
+  bottom: calc(14px + var(--safe-bottom));
+  z-index: 30;
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--text-mute);
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: 0px;
+  padding: 4px 9px;
+  pointer-events: none;
+}
+
+@media (max-width: 560px){
+  .navbar{ justify-content: center; text-align: center; }
+  .nav-links{ flex-wrap: wrap; justify-content: center; gap: 14px 18px; }
+  .canvas-meta{ display: none; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .canvas{ animation: none; }
 }
